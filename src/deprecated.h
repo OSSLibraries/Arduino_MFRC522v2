@@ -1,3 +1,4 @@
+/* SPDX-License-Identifier: LGPL-2.1 */
 /**
  * Copyright (c) 2016 by Ludwig Grill (www.rotzbua.de)
  * Simple deprecated workaround for Arduino IDE

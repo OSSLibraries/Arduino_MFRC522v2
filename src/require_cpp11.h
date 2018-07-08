@@ -1,3 +1,4 @@
+/* SPDX-License-Identifier: LGPL-2.1 */
 /**
  * Copyright (c) 2016 by Ludwig Grill (www.rotzbua.de)
  * Throws error if c++11 is not supported

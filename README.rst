@@ -1,39 +1,41 @@
-MFRC522
+Arduino_MFRC522v2
 =======
 
-.. image:: https://img.shields.io/maintenance/no/2019.svg
+.. image:: https://img.shields.io/badge/maintained-very%20rarely-orange
     :target: `development`_
-.. image:: https://travis-ci.org/miguelbalboa/rfid.svg?branch=master
-    :target: https://travis-ci.org/miguelbalboa/rfid
+.. image:: https://travis-ci.org/OSSLibraries/Arduino_MFRC522v2.svg?branch=master
+    :target: https://travis-ci.org/OSSLibraries/Arduino_MFRC522v2
 .. image:: https://img.shields.io/badge/C%2B%2B-11-brightgreen.svg
     :target: `compatible ide`_
-.. image:: https://img.shields.io/github/release/miguelbalboa/rfid.svg?colorB=green
-    :target: https://github.com/miguelbalboa/rfid/releases
-.. image:: https://img.shields.io/badge/ArduinoIDE-%3E%3D1.6.10-lightgrey.svg
+.. image:: https://img.shields.io/github/release/OSSLibraries/Arduino_MFRC522v2.svg?colorB=green
+    :target: https://github.com/OSSLibraries/Arduino_MFRC522v2/releases
+.. image:: https://img.shields.io/badge/ArduinoIDE-%3E%3D1.8.12-lightgrey.svg
     :target: `compatible ide`_
 
-Arduino library for MFRC522 and other RFID RC522 based modules.
+Advanced Arduino driver library for MFRC522 and other RFID RC522 based modules.
 
-Read and write different types of Radio-Frequency IDentification (RFID) cards
-on your Arduino using a RC522 based reader connected via the Serial Peripheral
-Interface (SPI) interface.
+Read and write different types of Radio-Frequency IDentification (RFID) cards on your Arduino using a RC522 based reader connected via the Serial Peripheral Interface (SPI) or I2C interface.
 
+Hints for this version
+----------
+
+* Fork of https://github.com/miguelbalboa/rfid/
+* Changed license to GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1.
+* Target group are experienced makers.
+* Code was heavily split up for better maintenance.
+* Hardware interface is fully customisable.
+* Use of software reset. No reset pin.
+* Some parts were removed.
 
 .. _development:
 Development
 ----------
 
-**The development by owner miguelbalboa has ended**.
+**Feature status: open**; focus on rfid; no applications;
 
-**Feature status: complete freeze**; no function or API change.
+**Code status: open**; fixes/typos or documentation updates; *no* specific code for other boards; *avoid* examples;
 
-**Code status: partial freeze**; just fixes/typos or documentation updates; *no* extensions for other boards; *no* new examples.
-
-**Maintenance status: sporadically**.
-
-**Why no further development?**
-This library has a long history and is used in many projects. These projects often do not document what version they use. Committing changes might break those old projects and lead to bad experiences (for beginners) and support requests. For these reasons the library is in freeze mode. You can still commit typo, documentation or bug fixes.
-
+**Maintenance status: sporadically**;
 
 .. _before buy:
 Before buy
@@ -73,7 +75,6 @@ What works and not?
   #. Use of IRQ pin. But there is a proof-of-concept example.
   #. With Intel Galileo (Gen2) see `#310 <https://github.com/miguelbalboa/rfid/issues/310>`__, not supported by software.
   #. Power reduction modes `#269 <https://github.com/miguelbalboa/rfid/issues/269>`_, not supported by software.
-  #. I2C instead of SPI `#240 <https://github.com/miguelbalboa/rfid/issues/240>`_, not supported by software.
   #. UART instead of SPI `#281 <https://github.com/miguelbalboa/rfid/issues/281>`_, not supported by software.
   
 * **Need more?**
@@ -302,31 +303,10 @@ Troubleshooting
 .. _license:
 License
 -------
-This is free and unencumbered software released into the public domain.
 
-Anyone is free to copy, modify, publish, use, compile, sell, or
-distribute this software, either in source code form or as a compiled
-binary, for any purpose, commercial or non-commercial, and by any
-means.
+GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1.
 
-In jurisdictions that recognize copyright laws, the author or authors
-of this software dedicate any and all copyright interest in the
-software to the public domain. We make this dedication for the benefit
-of the public at large and to the detriment of our heirs and
-successors. We intend this dedication to be an overt act of
-relinquishment in perpetuity of all present and future rights to this
-software under copyright law.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
-For more information, please refer to https://unlicense.org/
-
+It is not allowed to change the license.
 
 .. _dependency:
 Dependency

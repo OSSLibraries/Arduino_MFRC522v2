@@ -1,6 +1,19 @@
 -- Add changes to unreleased tag until we make a release.
 
-xx 2020, v1.4.8
+xx 2020, v2.0.1
+
+
+25 Jun 2020, v2.0.0
+- Changed license to GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1.
+- Target group are experienced makers.
+- Code was heavily split up for better maintenance.
+- Hardware interface is fully customisable. Use MFRC522Driver.h.
+- Use of software reset. No reset pin.
+- Removed many examples, focus on basic function
+
+25 Jun 2020, v1.4.7
+- Fixed typos
+- Moved PICC memory layout to /doc
 
 25 Jun 2020, v1.4.7
 - Fixed typos

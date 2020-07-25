@@ -20,7 +20,7 @@ public:
   
   bool MIFARE_OpenUidBackdoor(void) const;
   
-  bool MIFARE_SetUid(const byte *const newUid, const byte uidSize, MFRC522::MIFARE_Key &key) const;
+  bool MIFARE_SetUid(const byte *const newUid, const byte uidSize, MFRC522::MIFARE_Key &key, bool withBackdoor) const;
   
   bool MIFARE_UnbrickUidSector(void) const;
 };

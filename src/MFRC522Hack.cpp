@@ -84,7 +84,7 @@ bool MFRC522Hack::MIFARE_OpenUidBackdoor(void) const {
  * The common default KEY A is 0xFFFFFFFFFFFF.
  * Make sure to have selected the card before this function is called.
  */
-bool MFRC522Hack::MIFARE_SetUid(const byte *const newUid, const byte uidSize, MFRC522::MIFARE_Key &key) const {
+bool MFRC522Hack::MIFARE_SetUid(const byte *const newUid, const byte uidSize, MFRC522::MIFARE_Key &key, const bool withBackdoor) const {
   
   // UID + BCC byte can not be larger than 16 together
   if(!newUid || !uidSize || uidSize > 15) {
@@ -153,19 +153,22 @@ bool MFRC522Hack::MIFARE_SetUid(const byte *const newUid, const byte uidSize, MF
   // Write BCC byte to buffer.
   block0_buffer[uidSize] = bcc;
   
-  // Stop encrypted traffic so we can send raw bytes.
-  _device.PCD_StopCrypto1();
-  
-  // Activate UID backdoor.
-  if(!MIFARE_OpenUidBackdoor()) {
-    if(_logErrors) {
-      _logPrint->println(F("Activating the UID backdoor failed."));
+  // Some cards do not need the backdoor. They are writeable directly.
+  if(withBackdoor) {
+    // Stop encrypted traffic so we can send raw bytes.
+    _device.PCD_StopCrypto1();
+    
+    // Activate UID backdoor.
+    if(!MIFARE_OpenUidBackdoor()) {
+      if(_logErrors) {
+        _logPrint->println(F("Activating the UID backdoor failed."));
+      }
+      return false;
     }
-    return false;
   }
   
   // Write modified block 0 back to card.
-  status         = _device.MIFARE_Write((byte)0, block0_buffer, (byte)16);
+  status = _device.MIFARE_Write((byte)0, block0_buffer, (byte)16);
   
   if(status != StatusCode::STATUS_OK) {
     if(_logErrors) {
@@ -175,10 +178,13 @@ bool MFRC522Hack::MIFARE_SetUid(const byte *const newUid, const byte uidSize, MF
     return false;
   }
   
-  // Wake the card up again.
-  byte atqa_answer[2];
-  byte atqa_size = 2;
-  _device.PICC_WakeupA(atqa_answer, &atqa_size);
+  // Some cards do not need the backdoor. They are writeable directly.
+  if(withBackdoor) {
+    // Wake the card up again.
+    byte atqa_answer[2];
+    byte atqa_size = 2;
+    _device.PICC_WakeupA(atqa_answer, &atqa_size);
+  }
   
   return true;
 }

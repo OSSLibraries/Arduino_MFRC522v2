@@ -3,8 +3,8 @@ Arduino_MFRC522v2
 
 .. image:: https://img.shields.io/badge/maintained-very%20rarely-orange
     :target: `development`_
-.. image:: https://travis-ci.org/OSSLibraries/Arduino_MFRC522v2.svg?branch=master
-    :target: https://travis-ci.org/OSSLibraries/Arduino_MFRC522v2
+.. image:: https://travis-ci.com/OSSLibraries/Arduino_MFRC522v2.svg?branch=master
+    :target: https://travis-ci.com/github/OSSLibraries/Arduino_MFRC522v2
 .. image:: https://img.shields.io/badge/C%2B%2B-11-brightgreen.svg
     :target: `compatible ide`_
 .. image:: https://img.shields.io/github/release/OSSLibraries/Arduino_MFRC522v2.svg?colorB=green

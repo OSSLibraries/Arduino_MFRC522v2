@@ -80,10 +80,11 @@ bool MFRC522Hack::MIFARE_OpenUidBackdoor(void) const {
  * that block with the new UID, a freshly calculated BCC, and the original
  * manufacturer data.
  *
- * It assumes a default KEY A of 0xFFFFFFFFFFFF.
+ * Notes:
+ * The common default KEY A is 0xFFFFFFFFFFFF.
  * Make sure to have selected the card before this function is called.
  */
-bool MFRC522Hack::MIFARE_SetUid(const byte *const newUid, const byte uidSize) const {
+bool MFRC522Hack::MIFARE_SetUid(const byte *const newUid, const byte uidSize, MFRC522::MIFARE_Key &key) const {
   
   // UID + BCC byte can not be larger than 16 together
   if(!newUid || !uidSize || uidSize > 15) {
@@ -94,8 +95,7 @@ bool MFRC522Hack::MIFARE_SetUid(const byte *const newUid, const byte uidSize) co
   }
   
   // Authenticate for reading
-  MFRC522::MIFARE_Key key    = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
-  StatusCode          status = _device.PCD_Authenticate(PICC_Command::PICC_CMD_MF_AUTH_KEY_A, (byte)1, &key, &(_device.uid));
+  StatusCode status = _device.PCD_Authenticate(PICC_Command::PICC_CMD_MF_AUTH_KEY_A, (byte)1, &key, &(_device.uid));
   if(status != StatusCode::STATUS_OK) {
     if(status == StatusCode::STATUS_TIMEOUT) {
       // We get a read timeout if no card is selected yet, so let's select one.
@@ -130,14 +130,14 @@ bool MFRC522Hack::MIFARE_SetUid(const byte *const newUid, const byte uidSize) co
   
   // Read block 0
   byte block0_buffer[18];
-  byte byteCount             = sizeof(block0_buffer);
+  byte byteCount    = sizeof(block0_buffer);
   
   status = _device.MIFARE_Read((byte)0, block0_buffer, &byteCount);
   if(status != StatusCode::STATUS_OK) {
     if(_logErrors) {
       _logPrint->print(F("MIFARE_Read() failed: "));
       _logPrint->println(MFRC522Debug::GetStatusCodeName(status));
-      _logPrint->println(F("Are you sure your KEY A for sector 0 is 0xFFFFFFFFFFFF?"));
+      _logPrint->println(F("Are you sure your KEY A for sector 0 is correct?"));
     }
     return false;
   }

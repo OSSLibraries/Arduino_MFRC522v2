@@ -72,7 +72,7 @@ void loop() {
   Serial.println();
   
   // Set new UID.
-  if ( mfrc522Hack.MIFARE_SetUid(newUid, (byte)4) ) {
+  if ( mfrc522Hack.MIFARE_SetUid(newUid, (byte)4, key) ) {
     Serial.println(F("Wrote new UID to card."));
   }
   

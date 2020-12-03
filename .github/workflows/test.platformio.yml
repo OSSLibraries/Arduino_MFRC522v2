@@ -22,10 +22,10 @@ jobs:
         ]
         include:
           - boards: 'all'
-            additional_path: 'hack/'
+            additional_path: 'Hack/'
             example: 'ChangeUID'
           - boards: 'all'
-            additional_path: 'hack/'
+            additional_path: 'Hack/'
             example: 'FixBrickedUID'
         
     steps:

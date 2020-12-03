@@ -11,17 +11,23 @@ jobs:
       max-parallel: 20
       matrix:
         boards: ['all']
+        additional_path: ['']
         # add examples here and define which boards should be tested (only compile test)
         example: [
-            CustomI2C,
-            CustomSPI,
-            ChangeUID,
-            FixBrickedUID,
-            CheckFirmware,
-            DumpInfo,
-            ReadUidMultiReader,
-          ]
-
+          CustomI2C,
+          CustomSPI,
+          CheckFirmware,
+          DumpInfo,
+          ReadUidMultiReader,
+        ]
+        include:
+          - boards: 'all'
+            additional_path: 'hack/'
+            example: [
+              ChangeUID,
+              FixBrickedUID,
+            ]
+        
     steps:
     - uses: actions/checkout@v2
     - name: Cache pip
@@ -46,4 +52,4 @@ jobs:
       # test all
       run: platformio ci --lib=. --board=uno --board=megaatmega1280 --board=due --board=zero --board=d1_mini
       env:
-        PLATFORMIO_CI_SRC: examples/${{ matrix.example }}/${{ matrix.example }}.ino
+        PLATFORMIO_CI_SRC: examples/${{ matrix.additional_path }}${{ matrix.example }}/${{ matrix.example }}.ino

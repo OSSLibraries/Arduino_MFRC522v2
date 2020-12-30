@@ -26,7 +26,7 @@ public:
   // Advanced init with custom chip select method, e.g. with i2c port expander or multiplexer.
   MFRC522DriverSPI(MFRC522DriverPin &chipSelectPin,
                    SPIClass &spiClass = SPI,
-                   const SPISettings spiSettings = SPISettings(SPI_CLOCK_DIV4, MSBFIRST, SPI_MODE0)
+                   const SPISettings spiSettings = SPISettings(4000000u /* 4MHz */, MSBFIRST, SPI_MODE0)
                   ) : MFRC522Driver(),
                       _chipSelectPin(chipSelectPin),
                       _spiClass(spiClass),

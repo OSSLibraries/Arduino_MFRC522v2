@@ -1,7 +1,9 @@
 -- Add changes to unreleased tag until we make a release.
 
-xx 2020, v2.0.1
+xx xx 2021, v2.0.2
 
+30 Dec 2020, v2.0.1
+- Fixed wrong SPI clock speed.
 
 25 Jun 2020, v2.0.0
 - Changed license to GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1.

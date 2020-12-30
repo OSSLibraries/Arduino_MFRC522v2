@@ -80,7 +80,7 @@ GetStatusCodeName	KEYWORD2
 PICC_GetType	KEYWORD2
 PICC_GetTypeName	KEYWORD2
 
-# Support functions for debuging
+# Support functions for debugging
 PCD_DumpVersionToSerial	KEYWORD2
 PICC_DumpToSerial	KEYWORD2
 PICC_DumpDetailsToSerial	KEYWORD2

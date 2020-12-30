@@ -60,7 +60,7 @@ MFRC522::StatusCode MFRC522::PCD_CalculateCRC(byte *data,    ///< In: Pointer to
       return StatusCode::STATUS_OK;
     }
   }
-  // 89ms passed and nothing happend. Communication with the MFRC522 might be down.
+  // 89ms passed and nothing happened. Communication with the MFRC522 might be down.
   return StatusCode::STATUS_TIMEOUT;
 } // End PCD_CalculateCRC()
 
@@ -392,7 +392,7 @@ MFRC522::StatusCode MFRC522::PCD_CommunicateWithPICC(byte command,    ///< The c
       return StatusCode::STATUS_TIMEOUT;
     }
   }
-  // 35.7ms and nothing happend. Communication with the MFRC522 might be down.
+  // 35.7ms and nothing happened. Communication with the MFRC522 might be down.
   if(i == 0) {
     return StatusCode::STATUS_TIMEOUT;
   }
@@ -905,7 +905,7 @@ MFRC522::StatusCode MFRC522::MIFARE_Ultralight_Write(byte page,    ///< The page
     return StatusCode::STATUS_INVALID;
   }
   
-  // Build commmand buffer
+  // Build command buffer
   byte cmdBuffer[6];
   cmdBuffer[0] = PICC_Command::PICC_CMD_UL_WRITE;
   cmdBuffer[1] = page;

@@ -89,7 +89,7 @@ xx 2020, v2.0.1
 
 13 Mar 2017, v1.3.0
 - Warning: Source has moved to folder src!
-- Added addtional class to support ISO/IEC 14443-4 PICCs @JPG-Consulting
+- Added additional class to support ISO/IEC 14443-4 PICCs @JPG-Consulting
 - Added RATS (Request for Answer To Select) @JPG-Consulting
 - More information see https://github.com/miguelbalboa/rfid/pull/271 @JPG-Consulting
 

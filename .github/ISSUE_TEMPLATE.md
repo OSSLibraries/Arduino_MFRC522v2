@@ -5,7 +5,7 @@ GitHub issues only for **bugs** or **improvements** of the library. All other to
 
 For general support from the community, see [Arduino Forum](https://forum.arduino.cc/) or [StackOverflow](https://stackoverflow.com/questions/tagged/mifare).
 
-Please use the following template to give us as mutch information as you can.
+Please use the following template to give us as much information as you can.
 
 END - This is a comment just for you visible -->
 

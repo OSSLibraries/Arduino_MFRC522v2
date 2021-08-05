@@ -25,8 +25,8 @@ bool MFRC522Hack::MIFARE_OpenUidBackdoor(void) const {
   
   byte cmd       = 0x40;
   byte validBits = 7; // Our command is only 7 bits. After receiving card response, this will contain amount of valid response bits.
-  byte response[32]; // Card's response is written here.
-  byte received;
+  byte response[32] = {0}; // Card's response is written here.
+  byte received = sizeof(response);
   
   StatusCode status = _device.PCD_TransceiveData(&cmd, (byte)1, response, &received, &validBits, (byte)0, false); // 40
   if(status != StatusCode::STATUS_OK) {

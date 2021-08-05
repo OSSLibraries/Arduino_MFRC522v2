@@ -20,6 +20,8 @@
  * SPI MOSI    MOSI         11 / ICSP-4   51        D11        ICSP-4           16
  * SPI MISO    MISO         12 / ICSP-1   50        D12        ICSP-1           14
  * SPI SCK     SCK          13 / ICSP-3   52        D13        ICSP-3           15
+ *
+ * Not found? For more see: https://github.com/OSSLibraries/Arduino_MFRC522v2#pin-layout
  */
 
 #include <MFRC522v2.h>

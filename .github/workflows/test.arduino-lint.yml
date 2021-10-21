@@ -1,0 +1,16 @@
+name: Arduino lint
+on: [push, pull_request]
+
+# https://github.com/marketplace/actions/arduino-arduino-lint-action
+
+jobs:
+  arduino-lint:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run arduino library lint.
+        uses: arduino/arduino-lint-action@v1
+        with:
+          library-manager: submit
+          compliance: strict

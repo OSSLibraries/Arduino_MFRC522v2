@@ -1,0 +1,42 @@
+name: Arduino compile examples
+on: [push, pull_request]
+
+# https://github.com/marketplace/actions/compile-arduino-sketches
+
+jobs:
+  arduino-compile-examples:
+    name: ${{ matrix.board.fqbn }}
+    runs-on: ubuntu-20.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        board:
+          - fqbn: "arduino:avr:uno"
+            platform-name: arduino:avr
+          - fqbn: "arduino:avr:mega"
+            platform-name: arduino:avr
+          - fqbn: "arduino:samd:mkr1000"
+            platform-name: arduino:samd
+          - fqbn: "esp8266:esp8266:generic"
+            platform-name: esp8266:esp8266
+          - fqbn: "esp8266:esp8266:d1_mini"
+            platform-name: esp8266:esp8266
+        # Fix custom platform url for board matrix.
+        include:
+          - board:
+              platform-name: esp8266:esp8266
+            platforms: |
+              - name: esp8266:esp8266
+                source-url: https://arduino.esp8266.com/stable/package_esp8266com_index.json
+                version: 2.5.1
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Compiles every example with Arduino IDE.
+        uses: arduino/compile-sketches@v1
+        with:
+          platforms: ${{ matrix.platforms }}
+          fqbn: ${{ matrix.board.fqbn }}
+          enable-warnings-report: true

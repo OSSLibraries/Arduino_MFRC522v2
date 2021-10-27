@@ -1084,7 +1084,7 @@ MFRC522::StatusCode MFRC522::MIFARE_SetValue(byte blockAddr, int32_t value) {
  * @param[in]   pACK       result success???.
  * @return StatusCode::STATUS_OK on success, StatusCode::STATUS_??? otherwise.
  */
-MFRC522::StatusCode MFRC522::PCD_NTAG216_AUTH(byte password[4], byte pACK[]) {
+MFRC522::StatusCode MFRC522::PCD_NTAG216_AUTH(const byte password[4], byte pACK[]) {
   // TODO: Fix cmdBuffer length and rxlength. They really should match.
   //       (Better still, rxlength should not even be necessary.)
   // TODO: Refactor.

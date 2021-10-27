@@ -154,7 +154,7 @@ public:
   StatusCode MIFARE_Transfer(byte blockAddr);
   StatusCode MIFARE_GetValue(byte blockAddr, int32_t *value);
   StatusCode MIFARE_SetValue(byte blockAddr, int32_t value);
-  StatusCode PCD_NTAG216_AUTH(byte *password, byte pACK[]);
+  StatusCode PCD_NTAG216_AUTH(const byte password[4], byte pACK[]);
   
   /////////////////////////////////////////////////////////////////////////////////////
   // Support functions

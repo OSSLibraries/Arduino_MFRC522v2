@@ -178,6 +178,7 @@ public:
       STATUS_INTERNAL_ERROR,    // Internal error in the code. Should not happen ;-)
       STATUS_INVALID,    // Invalid argument.
       STATUS_CRC_WRONG,    // The CRC_A does not match.
+      STATUS_UNKNOWN,
       STATUS_MIFARE_NACK = 0xff    // A MIFARE PICC responded with NAK.
   };
   

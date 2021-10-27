@@ -127,6 +127,7 @@ bool MFRC522::PCD_Init() {
 
 /**
  * Performs a soft reset on the MFRC522 chip and waits for it to be ready again.
+ * TODO return result
  */
 void MFRC522::PCD_Reset() {
   _driver.PCD_WriteRegister(PCD_Register::CommandReg, PCD_Command::PCD_SoftReset);  // Issue the SoftReset command.
@@ -779,7 +780,7 @@ MFRC522::StatusCode MFRC522::PICC_HaltA() {
  */
 MFRC522::StatusCode MFRC522::PCD_Authenticate(byte command,    ///< PICC_Command::PICC_CMD_MF_AUTH_KEY_A or PICC_Command::PICC_CMD_MF_AUTH_KEY_B
                                               byte blockAddr,  ///< The block number. See numbering in the comments in the .h file.
-                                              MIFARE_Key *key,  ///< Pointer to the Crypteo1 key to use (6 bytes).
+                                              MIFARE_Key *key,  ///< Pointer to the Crypto1 key to use (6 bytes).
                                               Uid *uid      ///< Pointer to Uid struct. The first 4 bytes of the UID is used.
                                              ) {
   byte waitIRq = 0x10;    // IdleIRq

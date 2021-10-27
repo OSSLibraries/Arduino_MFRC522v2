@@ -36,8 +36,8 @@
 #include <MFRC522DriverPinSimple.h>
 #include <MFRC522Debug.h>
 
-MFRC522DriverPinSimple ss_1_pin(10); // Configurable, take a unused pin, only HIGH/LOW required, must be different to SS 2.
-MFRC522DriverPinSimple ss_2_pin(8); // Configurable, take a unused pin, only HIGH/LOW required, must be different to SS 1.
+MFRC522DriverPinSimple ss_1_pin(10); // Configurable, take an unused pin, only HIGH/LOW required, must be different to SS 2.
+MFRC522DriverPinSimple ss_2_pin(8); // Configurable, take an unused pin, only HIGH/LOW required, must be different to SS 1.
 
 MFRC522DriverSPI driver_1{ss_1_pin};
 MFRC522DriverSPI driver_2{ss_2_pin};
@@ -66,7 +66,7 @@ void setup() {
  * Main loop.
  */
 void loop() {
-  // Look for new cards
+  // Look for new cards.
   for (MFRC522 reader : readers) {
     if (reader.PICC_IsNewCardPresent() && reader.PICC_ReadCardSerial()) {
       Serial.print(F("Reader "));
@@ -74,29 +74,19 @@ void loop() {
       i++;
       Serial.print(i);
       
-      // Show some details of the PICC (that is: the tag/card)
+      // Show some details of the PICC (that is: the tag/card).
       Serial.print(F(": Card UID:"));
-      dump_byte_array(reader.uid.uidByte, reader.uid.size);
+      MFRC522Debug::PrintUID(Serial, reader.uid);
       Serial.println();
       
       Serial.print(F("PICC type: "));
       MFRC522::PICC_Type piccType = reader.PICC_GetType(reader.uid.sak);
       Serial.println(MFRC522Debug::PICC_GetTypeName(piccType));
       
-      // Halt PICC
+      // Halt PICC.
       reader.PICC_HaltA();
-      // Stop encryption on PCD
+      // Stop encryption on PCD.
       reader.PCD_StopCrypto1();
     }
-  }
-}
-
-/**
- * Helper routine to dump a byte array as hex values to Serial.
- */
-void dump_byte_array(byte *buffer, byte bufferSize) {
-  for (byte i = 0; i < bufferSize; i++) {
-    Serial.print(buffer[i] < 0x10 ? " 0" : " ");
-    Serial.print(buffer[i], HEX);
   }
 }

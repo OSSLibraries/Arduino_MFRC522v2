@@ -66,7 +66,16 @@ const __FlashStringHelper *MFRC522Debug::GetStatusCodeName(StatusCode code  ///<
   }
 } // End GetStatusCodeName()
 
+void MFRC522Debug::PrintUID(Print &logPrint, const MFRC522Constants::Uid &uid) {
+  for(byte i = 0; i < uid.size; i++) {
+    logPrint.print(uid.uidByte[i] < 0x10 ? " 0" : " ");
+    logPrint.print(uid.uidByte[i], HEX);
+  }
+}
 
+void MFRC522Debug::PrintSelectedUID(MFRC522 &device, Print &logPrint) {
+  PrintUID(logPrint, device.uid);
+}
 
 /**
  * Dumps debug info about the connected PCD to Serial.

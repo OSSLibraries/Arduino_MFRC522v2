@@ -56,7 +56,6 @@ void setup() {
 }
 
 void loop() {
-  
   // Reset the loop if no new card present on the sensor/reader. This saves the entire process when idle. And if present, select one.
   if ( !mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial() ) {
     delay(50);
@@ -67,10 +66,7 @@ void loop() {
   
   // Dump UID.
   Serial.print(F("Card UID:"));
-  for (byte i = 0; i < mfrc522.uid.size; i++) {
-    Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
-    Serial.print(mfrc522.uid.uidByte[i], HEX);
-  }
+  MFRC522Debug::PrintSelectedUID(mfrc522, Serial);
   Serial.println();
   
   // Set new UID.

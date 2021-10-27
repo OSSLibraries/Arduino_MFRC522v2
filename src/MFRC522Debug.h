@@ -21,7 +21,10 @@ public:
   
   // Support functions for debugging
   // Injected Arduino API with Print* could be replaced by void* if required.
+  static void PrintUID(Print &logPrint, const Uid &uid);
+  static void PrintSelectedUID(MFRC522 &device, Print &logPrint);
   static void PCD_DumpVersionToSerial(MFRC522 &device, Print &logPrint);
+  
   static void PICC_DumpToSerial(MFRC522 &device, Print &logPrint, Uid *uid);
   static void PICC_DumpDetailsToSerial(MFRC522 &device, Print &logPrint, Uid *uid);
   static void PICC_DumpMifareClassicToSerial(MFRC522 &device, Print &logPrint, Uid *uid, PICC_Type piccType, MIFARE_Key *key);

@@ -3,9 +3,12 @@ Arduino_MFRC522v2
 
 .. image:: https://img.shields.io/badge/maintained-very%20rarely-orange
     :target: `development`_
-.. image:: https://github.com/OSSLibraries/Arduino_MFRC522v2/workflows/PlatformIO%20CI/badge.svg
-   :target: https://github.com/OSSLibraries/Arduino_MFRC522v2/actions
-   :alt: GitHub Actions
+.. image:: https://github.com/OSSLibraries/Arduino_MFRC522v2/actions/workflows/test.arduino-compile-examples.yml/badge.svg
+   :target: https://github.com/OSSLibraries/Arduino_MFRC522v2/actions/workflows/test.arduino-compile-examples.yml
+   :alt: GitHub Actions - Arduino Compile Examples
+.. image:: https://github.com/OSSLibraries/Arduino_MFRC522v2/actions/workflows/test.arduino-lint.yml/badge.svg
+   :target: https://github.com/OSSLibraries/Arduino_MFRC522v2/actions/workflows/test.arduino-lint.yml
+   :alt: GitHub Actions - Arduino Lint
 .. image:: https://img.shields.io/badge/C%2B%2B-11-brightgreen.svg
     :target: `compatible ide`_
 .. image:: https://img.shields.io/github/release/OSSLibraries/Arduino_MFRC522v2.svg?colorB=green

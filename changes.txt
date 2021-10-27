@@ -1,6 +1,10 @@
 -- Add changes to unreleased tag until we make a release.
 
-xx xx 2021, v2.0.2
+xx xx 202x, v2.0.3
+
+28 Oct 2021, v2.0.2
+- Fix self-test.
+- Add UID print.
 
 30 Dec 2020, v2.0.1
 - Fixed wrong SPI clock speed.

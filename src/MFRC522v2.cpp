@@ -209,6 +209,7 @@ MFRC522::PCD_Version MFRC522::PCD_GetVersion() {
 /**
  * Performs a self-test of the MFRC522.
  * See 16.1.1 in http://www.nxp.com/documents/data_sheet/MFRC522.pdf
+ * Warning: Re-inits the PCD.
  * 
  * @return Whether or not the test passed. Or false if no firmware reference is available.
  */
@@ -217,22 +218,22 @@ bool MFRC522::PCD_PerformSelfTest() {
   // 1. Perform a soft reset.
   PCD_Reset();
   
-  // 2. Clear the internal buffer by writing 25 bytes of 00h
+  // 2. Clear the internal buffer by writing 25 bytes of 00h.
   byte ZEROES[25] = {0x00};
   _driver.PCD_WriteRegister(PCD_Register::FIFOLevelReg, 0x80);    // flush the FIFO buffer
   _driver.PCD_WriteRegister(PCD_Register::FIFODataReg, 25, ZEROES);  // write 25 bytes of 00h to FIFO
   _driver.PCD_WriteRegister(PCD_Register::CommandReg, PCD_Command::PCD_Mem);    // transfer to internal buffer
   
-  // 3. Enable self-test
+  // 3. Enable self-test.
   _driver.PCD_WriteRegister(PCD_Register::AutoTestReg, 0x09);
   
-  // 4. Write 00h to FIFO buffer
+  // 4. Write 00h to FIFO buffer.
   _driver.PCD_WriteRegister(PCD_Register::FIFODataReg, 0x00);
   
-  // 5. Start self-test by issuing the CalcCRC command
+  // 5. Start self-test by issuing the CalcCRC command.
   _driver.PCD_WriteRegister(PCD_Register::CommandReg, PCD_Command::PCD_CalcCRC);
   
-  // 6. Wait for self-test to complete
+  // 6. Wait for self-test to complete.
   byte        n;
   for(uint8_t i   = 0; i < 0xFF; i++) {
     // The datasheet does not specify exact completion condition except
@@ -255,9 +256,9 @@ bool MFRC522::PCD_PerformSelfTest() {
   
   // Auto self-test done
   // Reset AutoTestReg register to be 0 again. Required for normal operation.
-  _driver.PCD_WriteRegister(PCD_Register::AutoTestReg, 0x00);
+  _driver.PCD_WriteRegister(PCD_Register::AutoTestReg, 0x40 & 0x00);
   
-  // Determine firmware version (see section 9.3.4.8 in spec)
+  // Determine firmware version (see section 9.3.4.8 in spec).
   byte version = _driver.PCD_ReadRegister(PCD_Register::VersionReg);
   
   // Pick the appropriate reference values
@@ -279,18 +280,21 @@ bool MFRC522::PCD_PerformSelfTest() {
       return false; // abort test
   }
   
-  // Verify that the results match up to our expectations
+  bool verified = true;
+  // Verify that the results match up to our expectations.
   for(uint8_t i = 0; i < 64; i++) {
     if(result[i] != pgm_read_byte(&(reference[i]))) {
-      return false;
+      verified = false;
     }
   }
   
-  // 8. Perform a soft reset.
-  PCD_Reset();
+  // 8. Perform a re-init, because PCD does not work after test.
+  // Reset does not work as expected.
+  // "Auto self-test done" does not work as expected.
+  PCD_Init();
   
-  // Test passed; all is good.
-  return true;
+  // Test process done.
+  return verified;
 } // End PCD_PerformSelfTest()
 
 /////////////////////////////////////////////////////////////////////////////////////

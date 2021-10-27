@@ -8,7 +8,7 @@ env:
   SKETCHES_REPORTS_ARTIFACT_NAME: sketches-reports
 
 jobs:
-  arduino-compile-examples:
+  compile:
     name: ${{ matrix.board.fqbn }}
     runs-on: ubuntu-20.04
     timeout-minutes: 20

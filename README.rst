@@ -346,7 +346,7 @@ by Søren Thing Andersen (from http://access.thing.dk).
 It has been extended with functionality to alter sector 0 on Chinese UID changeable MIFARE card in Oct 2014 by Tom Clement (from http://tomclement.nl).
 
 Maintained by miguelbalboa until 2016.
-Maintained by Rotzbua from 2016 until 2020.
+Maintained by Rotzbua from 2016 until 2022.
 
 
 .. _arduino: https://arduino.cc/

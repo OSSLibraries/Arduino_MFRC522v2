@@ -91,8 +91,14 @@ void MFRC522Debug::PCD_DumpVersionToSerial(MFRC522 &device, Print &logPrint) {
   }
   // Human readable version.
   switch(version) {
+    case 0xb2:
+      logPrint.println(F(" = FM17522_1"));
+      break;
     case 0x88:
-      logPrint.println(F(" = (clone)"));
+      logPrint.println(F(" = FM17522"));
+      break;
+    case 0x89:
+      logPrint.println(F(" = FM17522E"));
       break;
     case 0x90:
       logPrint.println(F(" = v0.0"));

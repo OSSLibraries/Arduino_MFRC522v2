@@ -72,7 +72,7 @@ MFRC522::StatusCode MFRC522::PCD_CalculateCRC(byte *data,    ///< In: Pointer to
 /**
  * Initializes the MFRC522 chip.
  */
-bool MFRC522::PCD_Init() {
+bool MFRC522::PCD_Init(bool antenna_on) {
   // Init connection to PCD.
   if(_driver.init() == false) {
     return false;
@@ -116,8 +116,9 @@ bool MFRC522::PCD_Init() {
   
   _driver.PCD_WriteRegister(PCD_Register::TxASKReg, 0x40);    // Default 0x00. Force a 100 % ASK modulation independent of the ModGsPReg register setting
   _driver.PCD_WriteRegister(PCD_Register::ModeReg, 0x3D);    // Default 0x3F. Set the preset value for the CRC coprocessor for the CalcCRC command to 0x6363 (ISO 14443-3 part 6.2.4)
-  PCD_AntennaOn();            // Enable the antenna driver pins TX1 and TX2 (they were disabled by the reset)
-  
+  if (antenna_on) {
+    PCD_AntennaOn();            // Enable the antenna driver pins TX1 and TX2 (they were disabled by the reset)
+  }
   delay(4); // Optional delay of 4ms. Some board do need more time after init to be ready, see Readme.
   
   // If we get a valid version from board, the init was successful.

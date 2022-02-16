@@ -37,7 +37,7 @@ void MFRC522::PCD_ClearRegisterBitMask(PCD_Register reg,  ///< The register to u
 
 /**
  * Use the CRC coprocessor in the MFRC522 to calculate a CRC_A.
- * 
+ *
  * @return StatusCode::STATUS_OK on success, StatusCode::STATUS_??? otherwise.
  */
 MFRC522::StatusCode MFRC522::PCD_CalculateCRC(byte *data,    ///< In: Pointer to the data to transfer to the FIFO for CRC calculation.
@@ -450,7 +450,7 @@ MFRC522::StatusCode MFRC522::PCD_CommunicateWithPICC(byte command,    ///< The c
   if((byte)t_delta >= software_timeout_ms) {
     return StatusCode::STATUS_TIMEOUT;
   }
-  
+
   // Stop now if any errors except collisions were detected.
   byte errorRegValue = _driver.PCD_ReadRegister(PCD_Register::ErrorReg); // ErrorReg[7..0] bits are: WrErr TempErr reserved BufferOvfl CollErr CRCErr ParityErr ProtocolErr
   if(errorRegValue & 0x13) {   // BufferOvfl ParityErr ProtocolErr
@@ -698,8 +698,8 @@ MFRC522::StatusCode MFRC522::PICC_Select(Uid *uid,      ///< Pointer to Uid stru
         txLastBits = currentLevelKnownBits%8;
         count      = currentLevelKnownBits/8;  // Number of whole bytes in the UID part.
         index      = 2+count;          // Number of whole bytes: SEL + NVB + UIDs
-        buffer[1] = (index << 4)+txLastBits;  // NVB - Number of Valid Bits
-        bufferUsed     = index+(txLastBits ? 1 : 0);
+        buffer[1]  = (index << 4)+txLastBits;  // NVB - Number of Valid Bits
+        bufferUsed = index+(txLastBits ? 1 : 0);
         // Store response in the unused part of buffer
         responseBuffer = &buffer[index];
         responseLength = sizeof(buffer)-index;
@@ -707,7 +707,7 @@ MFRC522::StatusCode MFRC522::PICC_Select(Uid *uid,      ///< Pointer to Uid stru
       
       // Set bit adjustments
       rxAlign = txLastBits;                      // Having a separate variable is overkill. But it makes the next line easier to read.
-      _driver.PCD_WriteRegister(PCD_Register::BitFramingReg, (rxAlign << 4)+txLastBits);  // RxAlign = BitFramingReg[6..4]. TxLastBits = BitFramingReg[2..0]
+      //_driver.PCD_WriteRegister(PCD_Register::BitFramingReg, (rxAlign << 4)+txLastBits);  // RxAlign = BitFramingReg[6..4]. TxLastBits = BitFramingReg[2..0]
       
       // Transmit the buffer and receive the response.
       result = PCD_TransceiveData(buffer, bufferUsed, responseBuffer, &responseLength, &txLastBits, rxAlign);
@@ -720,11 +720,11 @@ MFRC522::StatusCode MFRC522::PICC_Select(Uid *uid,      ///< Pointer to Uid stru
         if(collisionPos == 0) {
           collisionPos = 32;
         }
-        if(collisionPos <= currentLevelKnownBits) { // No progress - should not happen 
+        currentLevelKnownBits += collisionPos;
+        if (currentLevelKnownBits > 32) {
           return StatusCode::STATUS_INTERNAL_ERROR;
         }
         // Choose the PICC with the bit set.
-        currentLevelKnownBits = collisionPos;
         count                 = currentLevelKnownBits%8; // The bit to modify
         checkBit              = (currentLevelKnownBits-1)%8;
         index                 = 1+(currentLevelKnownBits/8)+(count ? 1 : 0); // First byte is index 0.

@@ -1,6 +1,9 @@
 /* SPDX-License-Identifier: LGPL-2.1 */
 #include "MFRC522v2.h"
 
+// On 32-bit processors, software CRC computation is more efficient than
+// using a CRC coprocessor.
+#define USE_SOFTWARE_CRC 1
 /////////////////////////////////////////////////////////////////////////////////////
 // Functions for setting up the Arduino
 /////////////////////////////////////////////////////////////////////////////////////
@@ -42,6 +45,34 @@ MFRC522::StatusCode MFRC522::PCD_CalculateCRC(byte *data,    ///< In: Pointer to
                                               byte *result  ///< Out: Pointer to result buffer. Result is written to result[0..1], low byte first.
                                              ) {
   _driver.PCD_WriteRegister(PCD_Register::CommandReg, PCD_Command::PCD_Idle);    // Stop any active command.
+#ifdef USE_SOFTWARE_CRC
+  uint32_t wCrc = 0;
+  switch (_driver.PCD_ReadRegister(PCD_Register::ModeReg) & 3)
+  {
+  case 0:
+	wCrc = 0;
+	break;
+  case 1:
+	wCrc = 0x6363;
+	break;
+  case 2:
+	wCrc = 0xa671;
+	break;
+  default:
+	  wCrc = 0xffff;
+  }; // switch
+  // iso14443a CRC calculation
+  do {
+    uint8_t  bt;
+    bt = *data++;
+    bt = (bt ^ (uint8_t)(wCrc & 0x00FF));
+    bt = (bt ^ (bt << 4));
+    wCrc = (wCrc >> 8) ^ ((uint32_t) bt << 8) ^ ((uint32_t) bt << 3) ^ ((uint32_t) bt >> 4);
+  } while (--length);
+  *result++ = (uint8_t)(wCrc & 0xFF);
+  *result = (uint8_t)((wCrc >> 8) & 0xFF);
+  return StatusCode::STATUS_OK;
+#else
   _driver.PCD_WriteRegister(PCD_Register::DivIrqReg, 0x04);        // Clear the CRCIRq interrupt request bit
   _driver.PCD_WriteRegister(PCD_Register::FIFOLevelReg, 0x80);      // FlushBuffer = 1, FIFO initialization
   _driver.PCD_WriteRegister(PCD_Register::FIFODataReg, length, data);  // Write data to the FIFO
@@ -62,6 +93,7 @@ MFRC522::StatusCode MFRC522::PCD_CalculateCRC(byte *data,    ///< In: Pointer to
   }
   // 89ms passed and nothing happened. Communication with the MFRC522 might be down.
   return StatusCode::STATUS_TIMEOUT;
+#endif
 } // End PCD_CalculateCRC()
 
 

@@ -413,6 +413,7 @@ MFRC522::StatusCode MFRC522::PCD_CommunicateWithPICC(byte command,    ///< The c
                                                      byte rxAlign,    ///< In: Defines the bit position in backData[0] for the first bit received. Default 0.
                                                      bool checkCRC    ///< In: True => The last two bytes of the response is assumed to be a CRC_A that must be validated.
                                                     ) {
+  const byte software_timeout_ms = 36; // 36ms
   // Prepare values for BitFramingReg
   byte txLastBits = validBits ? *validBits : 0;
   byte bitFraming = (rxAlign << 4)+txLastBits;    // RxAlign = BitFramingReg[6..4]. TxLastBits = BitFramingReg[2..0]
@@ -424,25 +425,29 @@ MFRC522::StatusCode MFRC522::PCD_CommunicateWithPICC(byte command,    ///< The c
   _driver.PCD_WriteRegister(PCD_Register::BitFramingReg, bitFraming);    // Bit adjustments
   _driver.PCD_WriteRegister(PCD_Register::CommandReg, command);        // Execute the command
   if(command == PCD_Command::PCD_Transceive) {
-    PCD_SetRegisterBitMask(PCD_Register::BitFramingReg, 0x80);  // StartSend=1, transmission of data starts
+    _driver.PCD_WriteRegister(PCD_Register::BitFramingReg, bitFraming | 0x80);  // StartSend=1, transmission of data starts
   }
   
   // Wait for the command to complete.
   // In PCD_Init() we set the TAuto flag in TModeReg. This means the timer automatically starts when the PCD stops transmitting.
   // Each iteration of the do-while-loop takes 17.86μs.
   // TODO check/modify for other architectures than Arduino Uno 16bit
-  uint16_t i;
-  for(i = 2000; i > 0; i--) {
+  long t_delta=0;
+  long t_start=millis();
+  while( (byte)t_delta < software_timeout_ms) {
     byte n = _driver.PCD_ReadRegister(PCD_Register::ComIrqReg);  // ComIrqReg[7..0] bits are: Set1 TxIRq RxIRq IdleIRq HiAlertIRq LoAlertIRq ErrIRq TimerIRq
     if(n & waitIRq) {          // One of the interrupts that signal success has been set.
       break;
     }
     if(n & 0x01) {            // Timer interrupt - nothing received in 25ms
-      return StatusCode::STATUS_TIMEOUT;
+      return StatusCode::STATUS_TIMEOUT;	// Hardware timeout
     }
+    // todo  !! adaptive delay !!
+    delay(1);   // prevents bus flood
+    t_delta = millis() - t_start;
   }
   // 35.7ms and nothing happened. Communication with the MFRC522 might be down.
-  if(i == 0) {
+  if((byte)t_delta >= software_timeout_ms) {
     return StatusCode::STATUS_TIMEOUT;
   }
   

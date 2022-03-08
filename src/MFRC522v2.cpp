@@ -162,7 +162,7 @@ void MFRC522::PCD_AntennaOff() {
 
 /**
  * Get the current MFRC522 Receiver Gain (RxGain[2:0]) value.
- * See 9.3.3.6 / table 98 in http://www.nxp.com/documents/data_sheet/MFRC522.pdf
+ * See 9.3.3.6 / table 98 in https://www.nxp.com/docs/en/data-sheet/MFRC522.pdf
  * NOTE: Return value scrubbed with (0x07<<4)=01110000b as RCFfgReg may use reserved bits.
  * 
  * @return Value of the RxGain, scrubbed to the 3 bits used.
@@ -173,7 +173,7 @@ byte MFRC522::PCD_GetAntennaGain() {
 
 /**
  * Set the MFRC522 Receiver Gain (RxGain) to value specified by given mask.
- * See 9.3.3.6 / table 98 in http://www.nxp.com/documents/data_sheet/MFRC522.pdf
+ * See 9.3.3.6 / table 98 in https://www.nxp.com/docs/en/data-sheet/MFRC522.pdf
  * NOTE: Given mask is scrubbed with (0x07<<4)=01110000b as RCFfgReg may use reserved bits.
  */
 void MFRC522::PCD_SetAntennaGain(byte mask) {
@@ -209,7 +209,7 @@ MFRC522::PCD_Version MFRC522::PCD_GetVersion() {
 
 /**
  * Performs a self-test of the MFRC522.
- * See 16.1.1 in http://www.nxp.com/documents/data_sheet/MFRC522.pdf
+ * See 16.1.1 in https://www.nxp.com/docs/en/data-sheet/MFRC522.pdf
  * Warning: Re-inits the PCD.
  * 
  * @return Whether or not the test passed. Or false if no firmware reference is available.

@@ -93,7 +93,7 @@ public:
   };
   
   // MFRC522 RxGain[2:0] masks, defines the receiver's signal voltage gain factor (on the PCD).
-  // Described in 9.3.3.6 / table 98 of the datasheet at http://www.nxp.com/documents/data_sheet/MFRC522.pdf
+  // Described in 9.3.3.6 / table 98 of the datasheet at https://www.nxp.com/docs/en/data-sheet/MFRC522.pdf
   enum PCD_RxGain : byte {
       RxGain_18dB   = 0x00 << 4,    // 000b - 18 dB, minimum
       RxGain_23dB   = 0x01 << 4,    // 001b - 23 dB

@@ -1240,7 +1240,7 @@ void MFRC522::MIFARE_CalculateAccessBits(byte accessBitBuffer[3],  ///< Pointer 
   accessBitBuffer[0] = (~c2 & 0xF) << 4 | (~c1 & 0xF);
   accessBitBuffer[1] = c1 << 4 | (~c3 & 0xF);
   accessBitBuffer[2] = c3 << 4 | c2;
-} // End MIFARE_SetAccessBits()
+} // End MIFARE_CalculateAccessBits()
 
 /////////////////////////////////////////////////////////////////////////////////////
 // Convenience functions - does not add extra functionality

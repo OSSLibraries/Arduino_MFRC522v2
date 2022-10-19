@@ -5,10 +5,10 @@ on: [push, pull_request]
 
 jobs:
   arduino-lint:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Run arduino library lint.
         uses: arduino/arduino-lint-action@v1
         with:

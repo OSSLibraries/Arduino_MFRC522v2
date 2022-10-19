@@ -34,7 +34,7 @@ jobs:
             platforms: |
               - name: esp8266:esp8266
                 source-url: https://arduino.esp8266.com/stable/package_esp8266com_index.json
-                version: 2.5.1
+                version: 3.0.2
 
     steps:
       - uses: actions/checkout@v3

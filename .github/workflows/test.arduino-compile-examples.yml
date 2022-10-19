@@ -27,6 +27,12 @@ jobs:
             platform-name: esp8266:esp8266
           - fqbn: "esp8266:esp8266:d1_mini"
             platform-name: esp8266:esp8266
+          - fqbn: "esp32:esp32:esp32"
+            platform-name: esp32:esp32
+          - fqbn: "esp32:esp32:lolin_s2_mini"
+            platform-name: esp32:esp32
+          - fqbn: "esp32:esp32:lolin_c3_mini"
+            platform-name: esp32:esp32
         # Fix custom platform url for board matrix.
         include:
           - board:
@@ -35,6 +41,12 @@ jobs:
               - name: esp8266:esp8266
                 source-url: https://arduino.esp8266.com/stable/package_esp8266com_index.json
                 version: 3.0.2
+          - board:
+              platform-name: esp32:esp32
+            platforms: |
+              - name: esp32:esp32
+                source-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+                version: 2.0.5
 
     steps:
       - uses: actions/checkout@v3
@@ -44,6 +56,7 @@ jobs:
           platforms: ${{ matrix.platforms }}
           fqbn: ${{ matrix.board.fqbn }}
           enable-warnings-report: true
+          enable-deltas-report: true
       # This step is needed to pass the size data to the report job.
       - name: Upload sketches report to workflow artifact.
         uses: actions/upload-artifact@v3
@@ -58,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # This step is needed to get the size data produced by the compile jobs.
-      - name: Download sketches reports artifact
+      - name: Download sketches reports artifact.
         uses: actions/download-artifact@v3
         with:
           name: ${{ env.SKETCHES_REPORTS_ARTIFACT_NAME }}

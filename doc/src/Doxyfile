@@ -1,0 +1,11 @@
+PROJECT_NAME           = "MFRC522"
+INPUT                  = "../../src"
+
+OUTPUT_DIRECTORY       = "./_doxygen"
+EXTRACT_ALL            = NO # YES
+EXTRACT_PRIVATE        = NO # YES
+RECURSIVE              = YES
+VERBATIM_HEADERS       = NO
+GENERATE_HTML          = NO
+GENERATE_LATEX         = NO
+GENERATE_XML           = YES

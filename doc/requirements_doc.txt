@@ -1,0 +1,6 @@
+breathe
+exhale 
+myst-parser
+myst-parser[linkify]
+sphinx>=6
+sphinx-notfound-page

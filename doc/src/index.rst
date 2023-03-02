@@ -1,16 +1,14 @@
-Welcome to RFID_MFRC522v2's documentation!
-==========================================
-
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+
+.. include:: ../../README.rst
 
 Library documentation
 =====================
 
 .. toctree::
    :maxdepth: 4
-   
+
    lib/index.rst
 
 PICC

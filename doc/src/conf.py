@@ -9,7 +9,7 @@ import subprocess
 
 sys.path.append(os.path.abspath('../..'))
 
-# Doxygen
+# Create xml data by Doxygen for sphinx.
 subprocess.call('doxygen Doxyfile', shell=True)
 
 # -- Project information -----------------------------------------------------
@@ -42,26 +42,14 @@ exclude_patterns = ['Thumbs.db', '.DS_Store']
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
-## Markdown ##
 source_suffix = {
     '.rst': 'restructuredtext',
     '.txt': 'literal',
     '.md': 'markdown',
 }
-myst_enable_extensions = [
-    "linkify",
-    "smartquotes",
-    "strikethrough",
-    "tasklist",
-]
 
-## C++ CPP ##
-# Configuration for the breathe extension
-# Which directory to read the Doxygen output from
-# breathe_projects = {"ModernDoc":"xml"}
-# breathe_default_project = "ModernDoc"
-
-
+# If this is not None, a ‘Last updated on:’ timestamp is inserted at every page bottom.
+html_last_updated_fmt = ''
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -70,8 +58,15 @@ myst_enable_extensions = [
 html_theme = 'nature'
 html_static_path = ['_static']
 
-
-
+### Custom plugins ###
+## Markdown
+myst_enable_extensions = [
+    "linkify",
+    "smartquotes",
+    "strikethrough",
+    "tasklist",
+]
+## Bridge doxygen <> sphinx.
 breathe_projects = {
     'MFRC522': "./_doxygen/xml/"
 }
@@ -80,7 +75,7 @@ breathe_default_members = (
     'members', 
     # 'undoc-members',
 )
-
+## Auto generate doc for every cpp-file. 
 exhale_args = {
     "containmentFolder": "./lib",
     "doxygenStripFromPath": "..",

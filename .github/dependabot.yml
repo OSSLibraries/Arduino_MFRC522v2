@@ -12,5 +12,3 @@ updates:
       timezone: "Europe/Berlin"
       day: "sunday"
       time: "05:00"
-    labels:
-      - "github-actions-dependencies"

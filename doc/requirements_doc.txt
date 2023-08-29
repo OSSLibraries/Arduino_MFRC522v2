@@ -1,6 +1,6 @@
-breathe
-exhale 
-myst-parser
+breathe==4.35.0
+exhale==0.2.4
+myst-parser==2.0.0
 myst-parser[linkify]
-sphinx>=6
-sphinx-notfound-page
+sphinx==7.2.4
+sphinx-notfound-page==1.0.0rc1

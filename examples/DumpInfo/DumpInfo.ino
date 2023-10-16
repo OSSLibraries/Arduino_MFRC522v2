@@ -8,7 +8,7 @@
  * Reader on the Arduino SPI interface.
  * 
  * When the Arduino and the MFRC522 module are connected (see the pin layout below), load this sketch into Arduino IDE
- * then verify/compile and upload it. To see the output: use Tools, Serial Monitor of the IDE (hit Ctrl+Shft+M). When
+ * then verify/compile and upload it. To see the output: use Tools, Serial Monitor of the IDE (hit Ctrl+Shift+M). When
  * you present a PICC (that is: a RFID Tag or Card) at reading distance of the MFRC522 Reader/PCD, the serial output
  * will show the ID/UID, type and any data blocks it can read. Note: you may see "Timeout in communication" messages
  * when removing the PICC from reading distance too early.

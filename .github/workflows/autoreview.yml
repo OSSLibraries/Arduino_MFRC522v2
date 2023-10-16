@@ -1,12 +1,39 @@
 name: autoreview
-on: [pull_request]
+on: [ pull_request ]
 
 jobs:
   misspellcheck:
+    name: reviewdog/misspell
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - name: Run misspell with reviewdog
         uses: reviewdog/action-misspell@v1
-        #with:
-        #  pattern: "*.md"
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
+          #locale: "US"
+  remarklintcheck:
+    name: reviewdog/remark-lint
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: install remark presets
+        run: npm install
+        shell: bash
+      - uses: reviewdog/action-remark-lint@v5
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
+  codespellcheck:
+    name: codespell
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: codespell-project/actions-codespell@v2
+        with:
+          check_filenames: true
+          check_hidden: true
+          #ignore_words_file: .codespellignore
+          only_warn: true
+          uri_ignore_words_list: "*"

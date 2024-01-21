@@ -12,6 +12,8 @@ updates:
       timezone: "Europe/Berlin"
       day: "sunday"
       time: "05:00"
+    commit-message:
+      prefix: "chore(ci): "
     groups:
       github-actions:
         patterns:
@@ -23,6 +25,8 @@ updates:
       timezone: "Europe/Berlin"
       day: "sunday"
       time: "05:00"
+    commit-message:
+      prefix: "chore(doc): "
     groups:
       github-actions:
         patterns:

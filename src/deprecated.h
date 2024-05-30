@@ -9,10 +9,10 @@
 
 #ifdef __has_cpp_attribute
 #if __has_cpp_attribute(deprecated)
-#define DEPRECATED [[deprecated]]
-#define DEPRECATED_MSG(msg) [[deprecated(msg)]]
+#define MRFC_DEPRECATED [[deprecated]]
+#define MRFC_DEPRECATED(msg) [[deprecated(msg)]]
 #endif // __has_cpp_attribute(deprecated)
 #else
-#define DEPRECATED __attribute__((deprecated))
-#define DEPRECATED_MSG(msg) __attribute__((deprecated(msg)))
+#define MRFC_DEPRECATED __attribute__((deprecated))
+#define MRFC_DEPRECATED(msg) __attribute__((deprecated(msg)))
 #endif // __has_cpp_attribute

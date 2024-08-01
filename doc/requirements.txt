@@ -2,5 +2,5 @@ breathe==4.35.0
 exhale==0.3.7
 myst-parser==3.0.1
 myst-parser[linkify]
-sphinx==7.3.7
-sphinx-notfound-page==1.0.2
+sphinx==8.0.2
+sphinx-notfound-page==1.0.4

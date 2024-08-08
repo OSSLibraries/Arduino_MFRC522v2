@@ -2,7 +2,7 @@
 
 xx xx 202x, v2.0.6
 
-xx xx 202x, v2.0.5
+08 Aug 2024, v2.0.5
 - Remove deprecation, fix problem with ESP32 @PBrunot
 - Update documentation dependencies
 

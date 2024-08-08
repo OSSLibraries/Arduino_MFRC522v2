@@ -10,7 +10,6 @@
 #define MFRC522_h
 
 #include <require_cpp11.h>
-#include <deprecated.h>
 // Enable integer limits
 #define __STDC_LIMIT_MACROS
 

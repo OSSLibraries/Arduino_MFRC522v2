@@ -1,6 +1,10 @@
 -- Add changes to unreleased tag until we make a release.
 
+xx xx 202x, v2.0.6
+
 xx xx 202x, v2.0.5
+- Remove deprecation, fix problem with ESP32 @PBrunot
+- Update documentation dependencies
 
 19 Oct 2022, v2.0.4
 - More clones from FudanMicro

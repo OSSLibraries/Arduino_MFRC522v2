@@ -20,14 +20,10 @@ void MFRC522DriverUART::PCD_WriteRegister(const PCD_Register reg,    ///< The re
                                          const byte value           ///< The value to write.
                                         ) {
   // PCD_ReadRegister(reg);
-  Serial.print(MFRC522Debug::toString(reg));
-  Serial.printf(" < 0x%02x \n", value);
   _serial.write(reg);
   // read back the echoes address:
   byte readBack = 0xff;
   _serial.readBytes(&readBack, 1);
-  if (readBack != reg)
-    Serial.printf("Different address was read back 0x%02x != 0x%02x \n", reg, readBack);
   _serial.write(value);
 } // End PCD_WriteRegister().
 
@@ -55,8 +51,6 @@ byte MFRC522DriverUART::PCD_ReadRegister(const PCD_Register reg    ///< The regi
   byte regRead = reg | 0xC0;
   _serial.write(regRead);
   _serial.readBytes(&value, 1);
-  Serial.print(MFRC522Debug::toString(reg));
-  Serial.printf(" : 0x%02x \n", value);
   return value;
 } // End PCD_ReadRegister()
 

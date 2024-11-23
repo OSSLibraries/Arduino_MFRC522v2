@@ -66,7 +66,6 @@ If you got a bad board and you can tell us how to detect those boards (silk, chi
   * Use of IRQ pin. But there is a proof-of-concept example.
   * With Intel Galileo (Gen2) see [#310](https://github.com/miguelbalboa/rfid/issues/310), not supported by software.
   * Power reduction modes [#269](https://github.com/miguelbalboa/rfid/issues/269), not supported by software. 
-  * UART instead of SPI [#281](https://github.com/miguelbalboa/rfid/issues/281), not supported by software.
 
 * **Need more?**
 

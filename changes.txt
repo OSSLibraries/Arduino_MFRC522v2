@@ -1,6 +1,9 @@
 -- Add changes to unreleased tag until we make a release.
 
-xx xx 202x, v2.0.6
+xx xx 202x, v2.0.7
+
+25 Dec 2024, v2.0.6
+- Re-release broken v2.0.5
 
 08 Aug 2024, v2.0.5
 - Remove deprecation, fix problem with ESP32 @PBrunot

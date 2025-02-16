@@ -2,12 +2,12 @@ name: Build documentation and deploy to Pages
 
 on:
   push:
-    branches: ["master"]
+    branches: ['master']
   workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
 
 # Allow one concurrent deployment
 concurrency:
-  group: "pages"
+  group: 'pages'
   cancel-in-progress: true
 
 jobs:
@@ -15,15 +15,15 @@ jobs:
   build:
     # At a minimum this job should upload artifacts using actions/upload-pages-artifact
     # Specify runner + deployment step
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-          cache: "pip"
-          cache-dependency-path: "./doc/requirements.txt"
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: './doc/requirements.txt'
       - name: Install dependencies
         run: |
           pip install -r doc/requirements.txt
@@ -42,6 +42,7 @@ jobs:
   deploy:
     # Add a dependency to the build job
     needs: build
+    if: github.repository_owner == 'OSSLibraries'
 
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:

@@ -2,9 +2,18 @@ name: autoreview
 on: [ pull_request ]
 
 jobs:
+  actionlint:
+    name: reviewdog/actionlint
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github
+      - uses: reviewdog/action-actionlint@v1
   misspellcheck:
     name: reviewdog/misspell
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Run misspell with reviewdog
@@ -12,10 +21,10 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-check
-          #locale: "US"
+          #locale: 'US'
   remarklintcheck:
     name: reviewdog/remark-lint
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: install remark presets
@@ -27,7 +36,7 @@ jobs:
           reporter: github-pr-check
   codespellcheck:
     name: codespell
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: codespell-project/actions-codespell@v2
@@ -36,4 +45,4 @@ jobs:
           check_hidden: true
           #ignore_words_file: .codespellignore
           only_warn: true
-          uri_ignore_words_list: "*"
+          uri_ignore_words_list: '*'

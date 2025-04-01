@@ -5,33 +5,74 @@ on: [push, pull_request]
 
 env:
   SKETCHES_REPORTS_PATH: sketches-reports
-  SKETCHES_REPORTS_ARTIFACT_NAME: sketches-reports
+  SKETCHES_REPORTS_ARTIFACT_PREFIX: sketches-reports-
 
 jobs:
+  hide_bot_comments:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Hide outdated bot comments
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issue_number = context.issue.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            github.rest.issues.listComments({
+              owner,
+              repo,
+              issue_number,
+              per_page: 100
+            }).then(response => {
+              response.data.forEach(comment => {
+                if (comment.user.login === 'github-actions[bot]' && comment.user.type === 'Bot') {
+                  const commentId = comment.node_id;
+                  github.graphql(`
+                    mutation($commentId: ID!) {
+                      minimizeComment(input: {
+                        subjectId: $commentId,
+                        classifier: OUTDATED
+                      }) {
+                        minimizedComment {
+                          isMinimized
+                          minimizedReason
+                        }
+                      }
+                    }
+                  `, { commentId: commentId });
+                }
+              });
+            });
+
   compile:
+    needs: hide_bot_comments
     name: ${{ matrix.board.fqbn }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     strategy:
       fail-fast: false
       max-parallel: 20
       matrix:
         board:
-          - fqbn: "arduino:avr:uno"
+          - fqbn: 'arduino:avr:uno'
             platform-name: arduino:avr
-          - fqbn: "arduino:avr:mega"
+          - fqbn: 'arduino:avr:mega'
             platform-name: arduino:avr
-          - fqbn: "arduino:samd:mkr1000"
+          - fqbn: 'arduino:samd:mkr1000'
             platform-name: arduino:samd
-          - fqbn: "esp8266:esp8266:generic"
+          - fqbn: 'esp8266:esp8266:generic'
             platform-name: esp8266:esp8266
-          - fqbn: "esp8266:esp8266:d1_mini"
+          - fqbn: 'esp8266:esp8266:d1_mini'
             platform-name: esp8266:esp8266
-          - fqbn: "esp32:esp32:esp32"
+          - fqbn: 'esp32:esp32:esp32'
             platform-name: esp32:esp32
-          - fqbn: "esp32:esp32:lolin_s2_mini"
+          - fqbn: 'esp32:esp32:lolin_s2_mini'
             platform-name: esp32:esp32
-          - fqbn: "esp32:esp32:lolin_c3_mini"
+          - fqbn: 'esp32:esp32:lolin_c3_mini'
             platform-name: esp32:esp32
         # Fix custom platform url for board matrix.
         include:
@@ -46,7 +87,7 @@ jobs:
             platforms: |
               - name: esp32:esp32
                 source-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
-                version: 2.0.14
+                version: 3.1.0
 
     steps:
       - uses: actions/checkout@v4
@@ -57,24 +98,28 @@ jobs:
           fqbn: ${{ matrix.board.fqbn }}
           enable-warnings-report: true
           enable-deltas-report: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
       # This step is needed to pass the size data to the report job.
+      - name: Create upload name.
+        run: |
+          VALID_NAME=$(echo "${{ matrix.board.fqbn }}" | sed 's/:/-/g')
+          echo "UPLOAD_NAME=$VALID_NAME" >> "$GITHUB_ENV"
       - name: Upload sketches report to workflow artifact.
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.SKETCHES_REPORTS_ARTIFACT_NAME }}
+          name: ${{ env.SKETCHES_REPORTS_ARTIFACT_PREFIX }}${{ env.UPLOAD_NAME }}
           path: ${{ env.SKETCHES_REPORTS_PATH }}
 
   # When using a matrix to compile for multiple boards, it's necessary to use a separate job for the deltas report.
   report:
     needs: compile  # Wait for the compile job to finish to get the data for the report.
     if: github.event_name == 'pull_request' # Only run the job when the workflow is triggered by a pull request.
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       # This step is needed to get the size data produced by the compile jobs.
       - name: Download sketches reports artifact.
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.SKETCHES_REPORTS_ARTIFACT_NAME }}
           path: ${{ env.SKETCHES_REPORTS_PATH }}
 
       - uses: arduino/report-size-deltas@v1

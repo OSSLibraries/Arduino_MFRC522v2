@@ -29,7 +29,12 @@ void setup()
     digitalWrite(RESET_PIN, HIGH);  // Reset by positive edge.
     //--- Start serial
     Serial.begin (115200) ;
+#ifdef ESP32
     Serial1.begin(9600, SERIAL_8N1, /* rxPin */ 23, /* txPin */ 22);
+#else
+    // AVR does not support specifying of the pins when initializing a Serial device.
+    Serial1.begin(9600, SERIAL_8N1);
+#endif
     //--- Wait for serial (blink led at 10 Hz during waiting)
     while (!Serial) {
         delay (50) ;

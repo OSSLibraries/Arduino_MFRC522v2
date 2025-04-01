@@ -487,5 +487,6 @@ String MFRC522Debug::toString(PCD_Register reg)
     case PCD_Register::TestDAC1Reg       : return "TestDAC1Reg      ";
     case PCD_Register::TestDAC2Reg       : return "TestDAC2Reg      ";
     case PCD_Register::TestADCReg        : return "TestADCReg       ";
+    default                              : return String("Unknown Register: ") + reg;            
   }
 }

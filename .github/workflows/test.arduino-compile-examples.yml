@@ -105,7 +105,7 @@ jobs:
           VALID_NAME=$(echo "${{ matrix.board.fqbn }}" | sed 's/:/-/g')
           echo "UPLOAD_NAME=$VALID_NAME" >> "$GITHUB_ENV"
       - name: Upload sketches report to workflow artifact.
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ env.SKETCHES_REPORTS_ARTIFACT_PREFIX }}${{ env.UPLOAD_NAME }}
           path: ${{ env.SKETCHES_REPORTS_PATH }}
@@ -118,7 +118,7 @@ jobs:
     steps:
       # This step is needed to get the size data produced by the compile jobs.
       - name: Download sketches reports artifact.
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           path: ${{ env.SKETCHES_REPORTS_PATH }}
 

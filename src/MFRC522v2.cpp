@@ -1,6 +1,9 @@
 /* SPDX-License-Identifier: LGPL-2.1 */
 #include "MFRC522v2.h"
 
+// On 32-bit processors, software CRC computation is more efficient than
+// using a CRC coprocessor.
+#define USE_SOFTWARE_CRC 1
 /////////////////////////////////////////////////////////////////////////////////////
 // Functions for setting up the Arduino
 /////////////////////////////////////////////////////////////////////////////////////
@@ -34,7 +37,7 @@ void MFRC522::PCD_ClearRegisterBitMask(PCD_Register reg,  ///< The register to u
 
 /**
  * Use the CRC coprocessor in the MFRC522 to calculate a CRC_A.
- * 
+ *
  * @return StatusCode::STATUS_OK on success, StatusCode::STATUS_??? otherwise.
  */
 MFRC522::StatusCode MFRC522::PCD_CalculateCRC(byte *data,    ///< In: Pointer to the data to transfer to the FIFO for CRC calculation.
@@ -42,6 +45,34 @@ MFRC522::StatusCode MFRC522::PCD_CalculateCRC(byte *data,    ///< In: Pointer to
                                               byte *result  ///< Out: Pointer to result buffer. Result is written to result[0..1], low byte first.
                                              ) {
   _driver.PCD_WriteRegister(PCD_Register::CommandReg, PCD_Command::PCD_Idle);    // Stop any active command.
+#ifdef USE_SOFTWARE_CRC
+  uint32_t wCrc = 0;
+  switch (_driver.PCD_ReadRegister(PCD_Register::ModeReg) & 3)
+  {
+  case 0:
+	wCrc = 0;
+	break;
+  case 1:
+	wCrc = 0x6363;
+	break;
+  case 2:
+	wCrc = 0xa671;
+	break;
+  default:
+	  wCrc = 0xffff;
+  }; // switch
+  // iso14443a CRC calculation
+  do {
+    uint8_t  bt;
+    bt = *data++;
+    bt = (bt ^ (uint8_t)(wCrc & 0x00FF));
+    bt = (bt ^ (bt << 4));
+    wCrc = (wCrc >> 8) ^ ((uint32_t) bt << 8) ^ ((uint32_t) bt << 3) ^ ((uint32_t) bt >> 4);
+  } while (--length);
+  *result++ = (uint8_t)(wCrc & 0xFF);
+  *result = (uint8_t)((wCrc >> 8) & 0xFF);
+  return StatusCode::STATUS_OK;
+#else
   _driver.PCD_WriteRegister(PCD_Register::DivIrqReg, 0x04);        // Clear the CRCIRq interrupt request bit
   _driver.PCD_WriteRegister(PCD_Register::FIFOLevelReg, 0x80);      // FlushBuffer = 1, FIFO initialization
   _driver.PCD_WriteRegister(PCD_Register::FIFODataReg, length, data);  // Write data to the FIFO
@@ -62,6 +93,7 @@ MFRC522::StatusCode MFRC522::PCD_CalculateCRC(byte *data,    ///< In: Pointer to
   }
   // 89ms passed and nothing happened. Communication with the MFRC522 might be down.
   return StatusCode::STATUS_TIMEOUT;
+#endif
 } // End PCD_CalculateCRC()
 
 
@@ -72,7 +104,7 @@ MFRC522::StatusCode MFRC522::PCD_CalculateCRC(byte *data,    ///< In: Pointer to
 /**
  * Initializes the MFRC522 chip.
  */
-bool MFRC522::PCD_Init() {
+bool MFRC522::PCD_Init(bool antenna_on) {
   // Init connection to PCD.
   if(_driver.init() == false) {
     return false;
@@ -116,8 +148,9 @@ bool MFRC522::PCD_Init() {
   
   _driver.PCD_WriteRegister(PCD_Register::TxASKReg, 0x40);    // Default 0x00. Force a 100 % ASK modulation independent of the ModGsPReg register setting
   _driver.PCD_WriteRegister(PCD_Register::ModeReg, 0x3D);    // Default 0x3F. Set the preset value for the CRC coprocessor for the CalcCRC command to 0x6363 (ISO 14443-3 part 6.2.4)
-  PCD_AntennaOn();            // Enable the antenna driver pins TX1 and TX2 (they were disabled by the reset)
-  
+  if (antenna_on) {
+    PCD_AntennaOn();            // Enable the antenna driver pins TX1 and TX2 (they were disabled by the reset)
+  }
   delay(4); // Optional delay of 4ms. Some board do need more time after init to be ready, see Readme.
   
   // If we get a valid version from board, the init was successful.
@@ -380,6 +413,7 @@ MFRC522::StatusCode MFRC522::PCD_CommunicateWithPICC(byte command,    ///< The c
                                                      byte rxAlign,    ///< In: Defines the bit position in backData[0] for the first bit received. Default 0.
                                                      bool checkCRC    ///< In: True => The last two bytes of the response is assumed to be a CRC_A that must be validated.
                                                     ) {
+  const byte software_timeout_ms = 36; // 36ms
   // Prepare values for BitFramingReg
   byte txLastBits = validBits ? *validBits : 0;
   byte bitFraming = (rxAlign << 4)+txLastBits;    // RxAlign = BitFramingReg[6..4]. TxLastBits = BitFramingReg[2..0]
@@ -391,28 +425,32 @@ MFRC522::StatusCode MFRC522::PCD_CommunicateWithPICC(byte command,    ///< The c
   _driver.PCD_WriteRegister(PCD_Register::BitFramingReg, bitFraming);    // Bit adjustments
   _driver.PCD_WriteRegister(PCD_Register::CommandReg, command);        // Execute the command
   if(command == PCD_Command::PCD_Transceive) {
-    PCD_SetRegisterBitMask(PCD_Register::BitFramingReg, 0x80);  // StartSend=1, transmission of data starts
+    _driver.PCD_WriteRegister(PCD_Register::BitFramingReg, bitFraming | 0x80);  // StartSend=1, transmission of data starts
   }
   
   // Wait for the command to complete.
   // In PCD_Init() we set the TAuto flag in TModeReg. This means the timer automatically starts when the PCD stops transmitting.
   // Each iteration of the do-while-loop takes 17.86μs.
   // TODO check/modify for other architectures than Arduino Uno 16bit
-  uint16_t i;
-  for(i = 2000; i > 0; i--) {
+  long t_delta=0;
+  long t_start=millis();
+  while( (byte)t_delta < software_timeout_ms) {
     byte n = _driver.PCD_ReadRegister(PCD_Register::ComIrqReg);  // ComIrqReg[7..0] bits are: Set1 TxIRq RxIRq IdleIRq HiAlertIRq LoAlertIRq ErrIRq TimerIRq
     if(n & waitIRq) {          // One of the interrupts that signal success has been set.
       break;
     }
     if(n & 0x01) {            // Timer interrupt - nothing received in 25ms
-      return StatusCode::STATUS_TIMEOUT;
+      return StatusCode::STATUS_TIMEOUT;	// Hardware timeout
     }
+    // todo  !! adaptive delay !!
+    delay(1);   // prevents bus flood
+    t_delta = millis() - t_start;
   }
   // 35.7ms and nothing happened. Communication with the MFRC522 might be down.
-  if(i == 0) {
+  if((byte)t_delta >= software_timeout_ms) {
     return StatusCode::STATUS_TIMEOUT;
   }
-  
+
   // Stop now if any errors except collisions were detected.
   byte errorRegValue = _driver.PCD_ReadRegister(PCD_Register::ErrorReg); // ErrorReg[7..0] bits are: WrErr TempErr reserved BufferOvfl CollErr CRCErr ParityErr ProtocolErr
   if(errorRegValue & 0x13) {   // BufferOvfl ParityErr ProtocolErr
@@ -660,8 +698,8 @@ MFRC522::StatusCode MFRC522::PICC_Select(Uid *uid,      ///< Pointer to Uid stru
         txLastBits = currentLevelKnownBits%8;
         count      = currentLevelKnownBits/8;  // Number of whole bytes in the UID part.
         index      = 2+count;          // Number of whole bytes: SEL + NVB + UIDs
-        buffer[1] = (index << 4)+txLastBits;  // NVB - Number of Valid Bits
-        bufferUsed     = index+(txLastBits ? 1 : 0);
+        buffer[1]  = (index << 4)+txLastBits;  // NVB - Number of Valid Bits
+        bufferUsed = index+(txLastBits ? 1 : 0);
         // Store response in the unused part of buffer
         responseBuffer = &buffer[index];
         responseLength = sizeof(buffer)-index;
@@ -669,7 +707,7 @@ MFRC522::StatusCode MFRC522::PICC_Select(Uid *uid,      ///< Pointer to Uid stru
       
       // Set bit adjustments
       rxAlign = txLastBits;                      // Having a separate variable is overkill. But it makes the next line easier to read.
-      _driver.PCD_WriteRegister(PCD_Register::BitFramingReg, (rxAlign << 4)+txLastBits);  // RxAlign = BitFramingReg[6..4]. TxLastBits = BitFramingReg[2..0]
+      //_driver.PCD_WriteRegister(PCD_Register::BitFramingReg, (rxAlign << 4)+txLastBits);  // RxAlign = BitFramingReg[6..4]. TxLastBits = BitFramingReg[2..0]
       
       // Transmit the buffer and receive the response.
       result = PCD_TransceiveData(buffer, bufferUsed, responseBuffer, &responseLength, &txLastBits, rxAlign);
@@ -682,11 +720,11 @@ MFRC522::StatusCode MFRC522::PICC_Select(Uid *uid,      ///< Pointer to Uid stru
         if(collisionPos == 0) {
           collisionPos = 32;
         }
-        if(collisionPos <= currentLevelKnownBits) { // No progress - should not happen 
+        currentLevelKnownBits += collisionPos;
+        if (currentLevelKnownBits > 32) {
           return StatusCode::STATUS_INTERNAL_ERROR;
         }
         // Choose the PICC with the bit set.
-        currentLevelKnownBits = collisionPos;
         count                 = currentLevelKnownBits%8; // The bit to modify
         checkBit              = (currentLevelKnownBits-1)%8;
         index                 = 1+(currentLevelKnownBits/8)+(count ? 1 : 0); // First byte is index 0.

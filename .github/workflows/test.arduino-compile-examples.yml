@@ -11,7 +11,7 @@ jobs:
   hide_bot_comments:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Hide outdated bot comments
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v8
@@ -90,7 +90,7 @@ jobs:
                 version: 3.1.0
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Compiles every example with Arduino IDE.
         uses: arduino/compile-sketches@v1
         with:

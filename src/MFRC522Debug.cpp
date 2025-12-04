@@ -432,3 +432,61 @@ void MFRC522Debug::PICC_DumpMifareUltralightToSerial(MFRC522 &device, Print &log
     }
   }
 } // End PICC_DumpMifareUltralightToSerial()
+
+String MFRC522Debug::toString(PCD_Register reg)
+{
+  switch(reg)
+  {
+    case PCD_Register::CommandReg        : return "CommandReg       "; 
+    case PCD_Register::ComIEnReg         : return "ComIEnReg        "; 
+    case PCD_Register::DivIEnReg         : return "DivIEnReg        "; 
+    case PCD_Register::ComIrqReg         : return "ComIrqReg        "; 
+    case PCD_Register::DivIrqReg         : return "DivIrqReg        "; 
+    case PCD_Register::ErrorReg          : return "ErrorReg         "; 
+    case PCD_Register::Status1Reg        : return "Status1Reg       "; 
+    case PCD_Register::Status2Reg        : return "Status2Reg       "; 
+    case PCD_Register::FIFODataReg       : return "FIFODataReg      "; 
+    case PCD_Register::FIFOLevelReg      : return "FIFOLevelReg     "; 
+    case PCD_Register::WaterLevelReg     : return "WaterLevelReg    "; 
+    case PCD_Register::ControlReg        : return "ControlReg       "; 
+    case PCD_Register::BitFramingReg     : return "BitFramingReg    "; 
+    case PCD_Register::CollReg           : return "CollReg          "; 
+    case PCD_Register::ModeReg           : return "ModeReg          ";
+    case PCD_Register::TxModeReg         : return "TxModeReg        ";
+    case PCD_Register::RxModeReg         : return "RxModeReg        ";
+    case PCD_Register::TxControlReg      : return "TxControlReg     ";
+    case PCD_Register::TxASKReg          : return "TxASKReg         ";
+    case PCD_Register::TxSelReg          : return "TxSelReg         ";
+    case PCD_Register::RxSelReg          : return "RxSelReg         ";
+    case PCD_Register::RxThresholdReg    : return "RxThresholdReg   ";
+    case PCD_Register::DemodReg          : return "DemodReg         ";
+    case PCD_Register::MfTxReg           : return "MfTxReg          ";
+    case PCD_Register::MfRxReg           : return "MfRxReg          ";
+    case PCD_Register::SerialSpeedReg    : return "SerialSpeedReg   ";
+    case PCD_Register::CRCResultRegH     : return "CRCResultRegH    ";
+    case PCD_Register::CRCResultRegL     : return "CRCResultRegL    ";
+    case PCD_Register::ModWidthReg       : return "ModWidthReg      ";
+    case PCD_Register::RFCfgReg          : return "RFCfgReg         ";
+    case PCD_Register::GsNReg            : return "GsNReg           ";
+    case PCD_Register::CWGsPReg          : return "CWGsPReg         ";
+    case PCD_Register::ModGsPReg         : return "ModGsPReg        ";
+    case PCD_Register::TModeReg          : return "TModeReg         ";
+    case PCD_Register::TPrescalerReg     : return "TPrescalerReg    ";
+    case PCD_Register::TReloadRegH       : return "TReloadRegH      ";
+    case PCD_Register::TReloadRegL       : return "TReloadRegL      ";
+    case PCD_Register::TCounterValueRegH : return "TCounterValueRegH";
+    case PCD_Register::TCounterValueRegL : return "TCounterValueRegL";
+    case PCD_Register::TestSel1Reg       : return "TestSel1Reg      ";
+    case PCD_Register::TestSel2Reg       : return "TestSel2Reg      ";
+    case PCD_Register::TestPinEnReg      : return "TestPinEnReg     ";
+    case PCD_Register::TestPinValueReg   : return "TestPinValueReg  ";
+    case PCD_Register::TestBusReg        : return "TestBusReg       ";
+    case PCD_Register::AutoTestReg       : return "AutoTestReg      ";
+    case PCD_Register::VersionReg        : return "VersionReg       ";
+    case PCD_Register::AnalogTestReg     : return "AnalogTestReg    ";
+    case PCD_Register::TestDAC1Reg       : return "TestDAC1Reg      ";
+    case PCD_Register::TestDAC2Reg       : return "TestDAC2Reg      ";
+    case PCD_Register::TestADCReg        : return "TestADCReg       ";
+    default                              : return String("Unknown Register: ") + reg;
+  }
+}

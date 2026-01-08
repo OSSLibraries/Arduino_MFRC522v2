@@ -13,6 +13,7 @@ private:
   using PCD_Version = MFRC522Constants::PCD_Version;
   using Uid = MFRC522Constants::Uid;
   using MIFARE_Key = MFRC522Constants::MIFARE_Key;
+  using PCD_Register = MFRC522Constants::PCD_Register;
 
 public:
   // Get human readable code and type
@@ -30,4 +31,6 @@ public:
   static void PICC_DumpMifareClassicToSerial(MFRC522 &device, Print &logPrint, Uid *uid, PICC_Type piccType, MIFARE_Key *key);
   static void PICC_DumpMifareClassicSectorToSerial(MFRC522 &device, Print &logPrint, Uid *uid, MIFARE_Key *key, byte sector);
   static void PICC_DumpMifareUltralightToSerial(MFRC522 &device, Print &logPrint);
+
+  static String toString(PCD_Register reg);
 };

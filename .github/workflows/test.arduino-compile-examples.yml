@@ -11,10 +11,10 @@ jobs:
   hide_bot_comments:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Hide outdated bot comments
         if: github.event_name == 'pull_request'
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -90,7 +90,7 @@ jobs:
                 version: 3.1.0
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Compiles every example with Arduino IDE.
         uses: arduino/compile-sketches@v1
         with:
@@ -105,7 +105,7 @@ jobs:
           VALID_NAME=$(echo "${{ matrix.board.fqbn }}" | sed 's/:/-/g')
           echo "UPLOAD_NAME=$VALID_NAME" >> "$GITHUB_ENV"
       - name: Upload sketches report to workflow artifact.
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.SKETCHES_REPORTS_ARTIFACT_PREFIX }}${{ env.UPLOAD_NAME }}
           path: ${{ env.SKETCHES_REPORTS_PATH }}
@@ -118,7 +118,7 @@ jobs:
     steps:
       # This step is needed to get the size data produced by the compile jobs.
       - name: Download sketches reports artifact.
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           path: ${{ env.SKETCHES_REPORTS_PATH }}
 

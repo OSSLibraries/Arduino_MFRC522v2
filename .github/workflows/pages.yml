@@ -17,9 +17,9 @@ jobs:
     # Specify runner + deployment step
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
           cache: 'pip'
@@ -33,7 +33,7 @@ jobs:
           cd ./doc/
           make html
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ./doc/build/html/
           retention-days: 8
@@ -59,4 +59,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
